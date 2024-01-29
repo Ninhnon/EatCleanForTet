@@ -14,7 +14,7 @@ background_music = pygame.mixer.Sound('src/music/background.mp3')  # replace wit
 end_game_music = pygame.mixer.Sound('src/music/end.wav')
 
 # Set the countdown time
-countdown_time = 60  # 90 seconds for 1 minute and 30 seconds
+countdown_time = 60  # 60 seconds for 1 minute
 
 
 cap = cv2.VideoCapture(0)
