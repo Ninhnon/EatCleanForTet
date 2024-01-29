@@ -4,6 +4,7 @@ import cv2
 import pygame
 from cvzone.FaceMeshModule import FaceMeshDetector
 import cvzone
+import time
 
 # Initialize pygame for audio
 pygame.mixer.init()
@@ -12,7 +13,11 @@ pygame.mixer.init()
 background_music = pygame.mixer.Sound('src/music/background.mp3')  # replace with your background music file
 end_game_music = pygame.mixer.Sound('src/music/end.wav')
 
+# Set the countdown time
+countdown_time = 60  # 90 seconds for 1 minute and 30 seconds
 
+# Get the current time
+start_time = time.time()
 
 cap = cv2.VideoCapture(0)
 cap.set(3, 1280)
@@ -63,10 +68,20 @@ def resetObject():
 
 
 while True:
+    current_time = time.time()
+    elapsed_time = current_time - start_time
+    remaining_time = max(0, countdown_time - int(elapsed_time))
     success, img = cap.read()
     img = cv2.flip(img, 1)
     img = cvzone.overlayPNG(img, background_image, [0 , 0])
     if gameOver is False:
+        cv2.putText(img, str(count), (1100, 50), cv2.FONT_HERSHEY_COMPLEX, 2, (255, 0, 255), 5)
+        cv2.putText(img, f"Time: {remaining_time}s", (50, 100), cv2.FONT_HERSHEY_COMPLEX, 1.5, (255, 0, 255), 2)
+
+        if remaining_time == 0:
+            gameOver = True
+            end_game_music.play()
+            start_time = time.time()
         img, faces = detector.findFaceMesh(img, draw=False)
         # img, faces = detector.findFaceMesh(img, draw=True)
         img = cvzone.overlayPNG(img, currentObject, pos)
@@ -95,7 +110,7 @@ while True:
             cx, cy = (up[0] + down[0]) // 2, (up[1] + down[1]) // 2
             # cv2.line(img, (cx, cy), (pos[0] + 50, pos[1] + 50), (0, 255, 0), 3)
             distMouthObject, _ = detector.findDistance((cx, cy), (pos[0] + 50, pos[1] + 50))
-            print(distMouthObject)
+            # print(distMouthObject)
 
             # Lip opened or closed
             ratio = int((upDown / leftRight) * 100)
