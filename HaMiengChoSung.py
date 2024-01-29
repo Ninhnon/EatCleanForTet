@@ -14,7 +14,7 @@ background_music = pygame.mixer.Sound('src/music/background.mp3')  # replace wit
 end_game_music = pygame.mixer.Sound('src/music/end.wav')
 
 # Set the countdown time
-countdown_time = 60  # 90 seconds for 1 minute and 30 seconds
+countdown_time = 90  # 90 seconds for 1 minute and 30 seconds
 
 # Get the current time
 start_time = time.time()
@@ -82,6 +82,8 @@ while True:
             gameOver = True
             end_game_music.play()
             start_time = time.time()
+            elapsed_time = current_time - start_time
+            remaining_time = max(0, countdown_time - int(elapsed_time))
         img, faces = detector.findFaceMesh(img, draw=False)
         # img, faces = detector.findFaceMesh(img, draw=True)
         img = cvzone.overlayPNG(img, currentObject, pos)
@@ -140,6 +142,9 @@ while True:
     if key == ord('r'):
         resetObject()
         gameOver = False
+        start_time = time.time()
+        elapsed_time = current_time - start_time
+        remaining_time = max(0, countdown_time - int(elapsed_time))
         count = 0
         currentObject = eatables[0]
         isEatable = True
