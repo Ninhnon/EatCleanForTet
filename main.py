@@ -14,10 +14,8 @@ background_music = pygame.mixer.Sound('src/music/background.mp3')  # replace wit
 end_game_music = pygame.mixer.Sound('src/music/end.wav')
 
 # Set the countdown time
-countdown_time = 90  # 90 seconds for 1 minute and 30 seconds
+countdown_time = 60  # 90 seconds for 1 minute and 30 seconds
 
-# Get the current time
-start_time = time.time()
 
 cap = cv2.VideoCapture(0)
 cap.set(3, 1280)
@@ -41,7 +39,7 @@ for object in listNonEatable:
 
 currentObject = eatables[0]
 pos = [300, 0]
-speed = 10
+speed = 20
 count = 0
 global isEatable
 isEatable = True
@@ -67,13 +65,16 @@ def resetObject():
     return currentObject
 
 
+# Get the current time
+start_time = time.time()
+
 while True:
-    current_time = time.time()
-    elapsed_time = current_time - start_time
-    remaining_time = max(0, countdown_time - int(elapsed_time))
     success, img = cap.read()
     img = cv2.flip(img, 1)
     img = cvzone.overlayPNG(img, background_image, [0 , 0])
+    current_time = time.time()
+    elapsed_time = current_time - start_time
+    remaining_time = max(0, countdown_time - int(elapsed_time))
     if gameOver is False:
         cv2.putText(img, str(count), (1100, 50), cv2.FONT_HERSHEY_COMPLEX, 2, (255, 0, 255), 5)
         cv2.putText(img, f"Time: {remaining_time}s", (50, 100), cv2.FONT_HERSHEY_COMPLEX, 1.5, (255, 0, 255), 2)
